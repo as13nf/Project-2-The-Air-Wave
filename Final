@@ -1,0 +1,174 @@
+//Project 2- The Air Wave
+
+import processing.video.*;
+
+float trueValue;
+float easing =0.9;
+
+float avgMotion;
+float Ptime;
+
+int textmsg=0;
+
+boolean trigger; // used for false/true statement
+
+// Variable for capture device
+Capture video;
+// Previous Frame
+PImage prevFrame;
+
+// How different must a pixel be to be a "motion" pixel
+float threshold = 50;
+
+PFont f; // Global font variable
+
+void setup() {
+  size(1024, 768);
+  // Using the default capture device
+  video = new Capture(this, width, height, 15);
+  // Create an empty image the same size as the video
+  prevFrame = createImage(video.width, video.height, RGB);
+  video.start();
+}
+
+void draw() {
+  //background(255);
+
+  // You don't need to display it to analyze it!
+  //image(video,0,0);
+
+  // Capture video
+  if (video.available()) {
+    // Save previous frame for motion detection!!
+    prevFrame.copy(video, 0, 0, video.width, video.height, 0, 0, video.width, video.height);
+    prevFrame.updatePixels();
+    video.read();
+  }
+
+  loadPixels();
+  video.loadPixels();
+  prevFrame.loadPixels();
+
+  // Begin loop to walk through every pixel
+  // Start with a total of 0
+  float totalMotion = 0;
+
+  // Sum the brightness of each pixel
+  for (int i = 0; i < video.pixels.length; i ++ ) {
+    // Step 2, what is the current color
+    color current = video.pixels[i];
+
+    // Step 3, what is the previous color
+    color previous = prevFrame.pixels[i];
+
+    // Step 4, compare colors (previous vs. current)
+    float r1 = red(current); 
+    float g1 = green(current);
+    float b1 = blue(current);
+    float r2 = red(previous); 
+    float g2 = green(previous);
+    float b2 = blue(previous);
+
+    // Motion for an individual pixel is the difference between the previous color and current color.
+    float diff = dist(r1, g1, b1, r2, g2, b2);
+    // totalMotion is the sum of all color differences. 
+    totalMotion += diff;
+  }
+
+  // averageMotion is total motion divided by the number of pixels analyzed.
+  avgMotion = totalMotion / video.pixels.length; 
+
+
+  smoothValue();
+  
+{
+
+  float dx = avgMotion - trueValue;
+  if(abs(dx) > 1) {
+    trueValue += dx * easing;
+  }
+}
+  
+
+  // Draw a circle based on average motion
+  smooth();
+  noStroke();
+  fill(0);
+  float r = avgMotion*2;
+  //ellipse(width/2,height/2,r,r);
+  print(textmsg);
+  print("     ");
+  println(trueValue);
+
+  if (trueValue > 45 && !trigger) { // true value if its greater than 45 then it will trigger as true
+    trigger = true;
+    if (textmsg>6)
+    {
+      textmsg=0;
+    }
+    else
+    {
+      textmsg++;
+    }
+  } 
+  else if (trueValue < 20 && trigger) { // true value if its less than 20 then it will trigger as false
+    trigger = false;
+  }
+
+
+
+  background(255);
+  fill (255, 0, 120);
+  textAlign(CENTER);
+  textSize(100);
+  f = createFont( "SynchroLET-48", 16, true);// fonts
+  
+  if (textmsg==1)
+  {
+    background(255);
+    fill (250, 13, 179);
+    textSize(200);
+
+    text ("Hi DF1", width/2, height/2);
+  }
+  if (textmsg==2)
+  {
+    background(255);
+    fill (15, 206, 115);
+    textSize(100);
+
+    text ("Whats up?", width/2, height/2);
+  }
+  if (textmsg==3)
+  {
+
+    background(255);
+    fill (142, 15, 206);
+    textSize(75);
+    text ("This is my project", width/2, height/2);
+  }
+  if (textmsg==4)
+  {
+    background(255);
+    fill (250, 13, 179);
+    textSize(50);
+
+    text ("Hope you like it?", width/2, height/2);
+  }
+    if (textmsg==5)
+  {
+    background(255);
+    fill (16, 133, 203);
+    textSize(25);
+
+    text ("Good luck with your project", width/2, height/2);
+  }
+      if (textmsg==6)
+  {
+    background(255);
+    fill (185, 13, 28);
+    textSize(15);
+
+    text ("Cheers & see ya tomorow:)", width/2, height/2);
+  }
+}
