@@ -151,7 +151,7 @@ void draw() {
   {
     background(255);
     fill (250, 13, 179);
-    textSize(50);
+    textSize(75);
 
     text ("Hope you like it?", width/2, height/2);
   }
@@ -159,7 +159,7 @@ void draw() {
   {
     background(255);
     fill (16, 133, 203);
-    textSize(25);
+    textSize(50);
 
     text ("Good luck with your project", width/2, height/2);
   }
@@ -167,7 +167,7 @@ void draw() {
   {
     background(255);
     fill (185, 13, 28);
-    textSize(15);
+    textSize(50);
 
     text ("Cheers & see ya tomorow:)", width/2, height/2);
   }
